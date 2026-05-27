@@ -77,7 +77,6 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
         else:
             status_code = response.status_code
             after_time = time.perf_counter()
-            # retrieve trace id for exemplar
             span = trace.get_current_span()
             trace_id = trace.format_trace_id(
                 span.get_span_context().trace_id)
@@ -108,14 +107,11 @@ def metrics(request: Request) -> Response:
 
 
 def setting_otlp(app: ASGIApp, app_name: str, endpoint: str, log_correlation: bool = True) -> None:
-    # Setting OpenTelemetry
-    # set the service name to show in traces
     resource = Resource.create(attributes={
         "service.name": app_name,
         "compose_service": app_name
     })
 
-    # set the tracer provider
     tracer = TracerProvider(resource=resource)
     trace.set_tracer_provider(tracer)
 
