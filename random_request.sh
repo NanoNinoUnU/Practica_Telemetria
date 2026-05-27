@@ -11,6 +11,4 @@ for i in $(seq 1 $TIMES); do
     curl -s -o /dev/null -w "%{http_code}\n" "http://localhost:$PORT$ROUTE" &
 
     [ $((RANDOM % 3)) -eq 0 ] && wait
-
-    #sleep $((RANDOM % 2 + 1))
 done
